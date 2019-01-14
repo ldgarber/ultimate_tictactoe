@@ -22,15 +22,15 @@ console.log(
   )
 ); 
 //starting the game: print empty board
-var game = {
+const game = {
   board: [" "," "," "," "," "," "," "," "," "],  
 } 
 
-var playerOne = {
+const playerOne = {
   symbol: "X", 
   name: ""
 } 
-var playerTwo = {
+const playerTwo = {
   symbol: "O", 
   name: ""
 }
@@ -39,5 +39,39 @@ playerOne.name = readline.question("Player One, what is your name? ");
 playerTwo.name = readline.question("Player Two, what is your name? "); 
 
 var currentPlayer = playerOne; 
-console.log("Your turn, " + playerOne.name); 
-printBoard(game.board); 
+
+validMove = (move) => {
+  move = parseInt(move.trim()); 
+  console.log(move); 
+  if ((move == null) || isNaN(move)) {
+    console.log("null or NaN"); 
+    return false 
+  } else if (move > 9 || move < 1) {
+    console.log("not in range 1-9"); 
+    return false 
+  } else if (game.board[move - 1] != " ") {
+    console.log("game board is occupied at position"); 
+    return false; 
+  } 
+  return true
+} 
+
+playMove = (move, currentPlayer, game) => {
+  game.board[move - 1] = currentPlayer.symbol; 
+} 
+
+takeTurn = (currentPlayer) => {
+  console.log("Your turn, " + currentPlayer.name); 
+  printBoard(game.board); 
+
+  move = readline.question("Play in any empty square (enter # 1-9)"); 
+  while (!validMove(move)) {
+    move = readline.question("Move not valid. Please enter a digit between 1-9"); 
+  } 
+  playMove(move, currentPlayer, game); 
+} 
+
+takeTurn(currentPlayer); 
+currentPlayer = (currentPlayer == playerOne) ? playerTwo : playerOne; 
+takeTurn(currentPlayer); 
+
