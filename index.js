@@ -69,23 +69,64 @@ takeTurn = (currentPlayer) => {
   playMove(move, currentPlayer, game); 
 } 
 
-isTie = (board) => {
+isTie = ( board ) => {
   return !(board.includes(" ")); 
 } 
 
+checkCombination = ( combo ) => {
+  if (combo[0] == " ") {
+    return false
+  } 
+  if (combo[0] == combo[1] && combo[1] == combo[2]) {
+    return true; 
+  } 
+  return false; 
+} 
+
+isWin = ( board ) => {
+  var won = false; 
+  combinations = [ 
+    [board[0], board[3], board[6]], 
+    [board[1], board[4], board[7]], 
+    [board[2], board[5], board[8]], 
+    [board[0], board[1], board[2]], 
+    [board[3], board[4], board[5]], 
+    [board[6], board[7], board[8]], 
+    [board[0], board[4], board[8]], 
+    [board[2], board[4], board[6]]
+  ]; 
+
+  combinations.forEach(function(combination) {
+    if (checkCombination(combination) == true) { 
+      won = true; 
+      return; 
+    } 
+  }); 
+
+  return won; 
+} 
+
 gameOver = (game) => {
-  console.log(game.board); 
-  if (isTie(game.board)) {
+
+  if (isWin(game.board)) {
+    printBoard(game.board); 
+    console.log(otherPlayer.name + " won!! Congrats " + otherPlayer.name); 
+    return true; 
+  } else if (isTie(game.board)) {
+    printBoard(game.board); 
     console.log("It's a tie!"); 
     return true; 
-  }  
+  } 
+  return false; 
 } 
 
 var currentPlayer = playerOne; 
+var otherPlayer = playerTwo; 
 while (!gameOver(game)){
   takeTurn(currentPlayer); 
+
   //switch current player
   currentPlayer = (currentPlayer == playerOne) ? playerTwo : playerOne; 
+  otherPlayer = (otherPlayer == playerOne) ? playerTwo : playerOne; 
 }
-
 
