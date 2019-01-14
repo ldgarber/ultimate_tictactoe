@@ -1,0 +1,32 @@
+{
+  "name": "ultimate_tictactoe",
+  "version": "1.0.0",
+  "description": "ultimate (9x9) tic tac toe",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ldgarber/ultimate_tictactoe.git"
+  },
+  "keywords": [
+    "game",
+    "cli"
+  ],
+  "author": "Leah Garber",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.3.0", 
+    "clear": "0.0.1", 
+    "clui": "^0.3.6", 
+    "figlet": "^1.2.0", 
+    "inquirer": "^5.0.1", 
+    "lodash": "^4.17.4", 
+    "minimist": "1.2.0"
+  }
+  "bugs": {
+    "url": "https://github.com/ldgarber/ultimate_tictactoe/issues"
+  },
+  "homepage": "https://github.com/ldgarber/ultimate_tictactoe#readme"
+}
