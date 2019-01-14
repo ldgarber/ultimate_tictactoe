@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "description": "ultimate (9x9) tic tac toe",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ldgarber/ultimate_tictactoe.git"
@@ -17,14 +15,15 @@
   "author": "Leah Garber",
   "license": "ISC",
   "dependencies": {
-    "chalk": "^2.3.0", 
-    "clear": "0.0.1", 
-    "clui": "^0.3.6", 
-    "figlet": "^1.2.0", 
-    "inquirer": "^5.0.1", 
-    "lodash": "^4.17.4", 
-    "minimist": "1.2.0"
-  }
+    "chalk": "^2.3.0",
+    "clear": "0.0.1",
+    "clui": "^0.3.6",
+    "figlet": "^1.2.0",
+    "inquirer": "^5.0.1",
+    "lodash": "^4.17.4",
+    "minimist": "1.2.0",
+    "readline-sync": "^1.4.9"
+  },
   "bugs": {
     "url": "https://github.com/ldgarber/ultimate_tictactoe/issues"
   },
