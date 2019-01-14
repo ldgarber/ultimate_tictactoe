@@ -14,7 +14,6 @@ ${board[6]} | ${board[7]} | ${board[8]}`
   console.log(printedBoard); 
 }
 
-
 clear(); 
 console.log(
   chalk.yellow(
@@ -38,7 +37,6 @@ const playerTwo = {
 playerOne.name = readline.question("Player One, what is your name? "); 
 playerTwo.name = readline.question("Player Two, what is your name? "); 
 
-var currentPlayer = playerOne; 
 
 validMove = (move) => {
   move = parseInt(move.trim()); 
@@ -71,7 +69,23 @@ takeTurn = (currentPlayer) => {
   playMove(move, currentPlayer, game); 
 } 
 
-takeTurn(currentPlayer); 
-currentPlayer = (currentPlayer == playerOne) ? playerTwo : playerOne; 
-takeTurn(currentPlayer); 
+isTie = (board) => {
+  return !(board.includes(" ")); 
+} 
+
+gameOver = (game) => {
+  console.log(game.board); 
+  if (isTie(game.board)) {
+    console.log("It's a tie!"); 
+    return true; 
+  }  
+} 
+
+var currentPlayer = playerOne; 
+while (!gameOver(game)){
+  takeTurn(currentPlayer); 
+  //switch current player
+  currentPlayer = (currentPlayer == playerOne) ? playerTwo : playerOne; 
+}
+
 
