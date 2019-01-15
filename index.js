@@ -14,14 +14,21 @@ ${board[6]} | ${board[7]} | ${board[8]}`
   console.log(printedBoard); 
 }
 
-const playerOne = {
-  symbol: "X", 
-  name: ""
+class Player {
+  constructor(name, symbol) {
+    this.symbol = symbol;  
+    this.name = name;  
+  } 
+  getName() {
+    this.name
+  } 
+  setName(name) {
+    this.name = name; 
+  } 
 } 
-const playerTwo = {
-  symbol: "O", 
-  name: ""
-}
+
+const playerOne = new Player("", "X"); 
+const playerTwo = new Player("", "O"); 
 
 validMove = (game, move) => {
   move = parseInt(move.trim()); 
@@ -115,8 +122,8 @@ displayTitle = () => {
 }
 
 getPlayerNames = () => {
-  playerOne.name = readline.question("Player One, what is your name? "); 
-  playerTwo.name = readline.question("Player Two, what is your name? "); 
+  playerOne.setName(readline.question("Player One, what is your name? ")); 
+  playerTwo.setName(readline.question("Player Two, what is your name? ")); 
 } 
 
 playGame = () => {
