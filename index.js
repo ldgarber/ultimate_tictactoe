@@ -14,10 +14,6 @@ ${board[6]} | ${board[7]} | ${board[8]}`
   console.log(printedBoard); 
 }
 
-const game = {
-  board: [" "," "," "," "," "," "," "," "," "],  
-} 
-
 const playerOne = {
   symbol: "X", 
   name: ""
@@ -27,7 +23,7 @@ const playerTwo = {
   name: ""
 }
 
-validMove = (move) => {
+validMove = (game, move) => {
   move = parseInt(move.trim()); 
   console.log(move); 
   if ((move == null) || isNaN(move)) {
@@ -47,12 +43,12 @@ playMove = (move, currentPlayer, game) => {
   game.board[move - 1] = currentPlayer.symbol; 
 } 
 
-takeTurn = (currentPlayer) => {
+takeTurn = (game, currentPlayer) => {
   console.log("Your turn, " + currentPlayer.name); 
   printBoard(game.board); 
 
   move = readline.question("Play in any empty square (enter # 1-9)"); 
-  while (!validMove(move)) {
+  while (!validMove(game, move)) {
     move = readline.question("Move not valid. Please enter a digit between 1-9"); 
   } 
   playMove(move, currentPlayer, game); 
@@ -95,9 +91,10 @@ isWin = ( board ) => {
   return won; 
 } 
 
-gameOver = (game) => {
+gameOver = (game, currentPlayer) => {
   if (isWin(game.board)) {
     printBoard(game.board); 
+    var otherPlayer = (currentPlayer == playerOne)? playerTwo : playerOne; 
     console.log(otherPlayer.name + " won!! Congrats " + otherPlayer.name); 
     return true; 
   } else if (isTie(game.board)) {
@@ -124,19 +121,22 @@ getPlayerNames = () => {
 
 playGame = () => {
   var currentPlayer = playerOne; 
-  var otherPlayer = playerTwo; 
-  while (!gameOver(game)){
-    takeTurn(currentPlayer); 
+
+  const game = {
+    board: [" "," "," "," "," "," "," "," "," "],  
+  } 
+
+  while (!gameOver(game, currentPlayer)){
+    takeTurn(game, currentPlayer); 
 
     //switch current player
     currentPlayer = (currentPlayer == playerOne) ? playerTwo : playerOne; 
-    otherPlayer = (otherPlayer == playerOne) ? playerTwo : playerOne; 
   }
 } 
 
 playAgain = () => {
-  playAgain = readline.question("Would you like to play again? Y/n "); 
-  if (playAgain.toLowerCase() == "y") {
+  userInput = readline.question("Would you like to play again? Y/n "); 
+  if (userInput.toLowerCase() == "y") {
     return true; 
   } else {
     return false; 
@@ -151,8 +151,8 @@ rollCredits = () => {
     )
   ); 
   console.log(
-    chalk.red(
-      "Copyright Leah Garber 2019" 
+    chalk.yellow(
+      figlet.textSync("* ldgarber 2019 *", { horiontalLayout: 'full' }) 
     )
   ); 
 }
@@ -160,10 +160,11 @@ rollCredits = () => {
 ultimateTicTacToe = () => {
   displayTitle(); 
   getPlayerNames(); 
-  while (newGame = true) {
+  var newGame; 
+  do {
     playGame(); 
     newGame = playAgain(); 
-  } 
+  } while (newGame)
   rollCredits();   
 } 
 
