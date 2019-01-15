@@ -14,13 +14,6 @@ ${board[6]} | ${board[7]} | ${board[8]}`
   console.log(printedBoard); 
 }
 
-clear(); 
-console.log(
-  chalk.yellow(
-    figlet.textSync('Tic Tac Toe', { horizontalLayout: 'full' })
-  )
-); 
-//starting the game: print empty board
 const game = {
   board: [" "," "," "," "," "," "," "," "," "],  
 } 
@@ -33,10 +26,6 @@ const playerTwo = {
   symbol: "O", 
   name: ""
 }
-
-playerOne.name = readline.question("Player One, what is your name? "); 
-playerTwo.name = readline.question("Player Two, what is your name? "); 
-
 
 validMove = (move) => {
   move = parseInt(move.trim()); 
@@ -107,7 +96,6 @@ isWin = ( board ) => {
 } 
 
 gameOver = (game) => {
-
   if (isWin(game.board)) {
     printBoard(game.board); 
     console.log(otherPlayer.name + " won!! Congrats " + otherPlayer.name); 
@@ -120,13 +108,63 @@ gameOver = (game) => {
   return false; 
 } 
 
-var currentPlayer = playerOne; 
-var otherPlayer = playerTwo; 
-while (!gameOver(game)){
-  takeTurn(currentPlayer); 
-
-  //switch current player
-  currentPlayer = (currentPlayer == playerOne) ? playerTwo : playerOne; 
-  otherPlayer = (otherPlayer == playerOne) ? playerTwo : playerOne; 
+displayTitle = () => {
+  clear(); 
+  console.log(
+    chalk.yellow(
+      figlet.textSync('Tic Tac Toe', { horizontalLayout: 'full' })
+    )
+  ); 
 }
 
+getPlayerNames = () => {
+  playerOne.name = readline.question("Player One, what is your name? "); 
+  playerTwo.name = readline.question("Player Two, what is your name? "); 
+} 
+
+playGame = () => {
+  var currentPlayer = playerOne; 
+  var otherPlayer = playerTwo; 
+  while (!gameOver(game)){
+    takeTurn(currentPlayer); 
+
+    //switch current player
+    currentPlayer = (currentPlayer == playerOne) ? playerTwo : playerOne; 
+    otherPlayer = (otherPlayer == playerOne) ? playerTwo : playerOne; 
+  }
+} 
+
+playAgain = () => {
+  playAgain = readline.question("Would you like to play again? Y/n "); 
+  if (playAgain.toLowerCase() == "y") {
+    return true; 
+  } else {
+    return false; 
+  } 
+} 
+
+rollCredits = () => {
+  clear(); 
+  console.log(
+    chalk.yellow(
+      figlet.textSync('Thank You', { horizontalLayout: 'full', font: '3-d' })
+    )
+  ); 
+  console.log(
+    chalk.red(
+      "Copyright Leah Garber 2019" 
+    )
+  ); 
+}
+
+ultimateTicTacToe = () => {
+  displayTitle(); 
+  getPlayerNames(); 
+  while (newGame = true) {
+    playGame(); 
+    newGame = playAgain(); 
+  } 
+  rollCredits();   
+} 
+
+ultimateTicTacToe(); 
