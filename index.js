@@ -94,10 +94,19 @@ class Game {
     }
   } 
 
+  getWinner() {
+    if (this.currentPlayer == this.playerOne) {
+      return this.playerTwo; 
+    } else {
+      return this.playerOne; 
+    } 
+  } 
+
   gameOver() {
     if (this.board.isWin()) {
+      var winner = this.getWinner().name 
       this.printBoard(this.board); 
-      console.log("You win!!"); 
+      console.log("You win, " + winner + "!! Congratulations " + winner); 
       return true; 
     } else if (this.board.isTie()) {
       this.printBoard(this.board); 
