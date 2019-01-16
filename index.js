@@ -3,15 +3,22 @@ const clear = require('clear');
 const figlet = require('figlet'); 
 const readline = require('readline-sync'); 
 
-printBoard = (board) => {
-  printedBoard = 
+class Game {
+  constructor() { 
+    this.board = [" "," "," "," "," "," "," "," "," "];   
+  } 
+
+  printBoard() {
+    var board = this.board; 
+    var printedBoard = 
 `${board[0]} | ${board[1]} | ${board[2]}
 ---------
 ${board[3]} | ${board[4]} | ${board[5]}
 ---------
 ${board[6]} | ${board[7]} | ${board[8]}`
 
-  console.log(printedBoard); 
+    console.log(printedBoard); 
+  }
 }
 
 class Player {
@@ -52,7 +59,7 @@ playMove = (move, currentPlayer, game) => {
 
 takeTurn = (game, currentPlayer) => {
   console.log("Your turn, " + currentPlayer.name); 
-  printBoard(game.board); 
+  game.printBoard(game.board); 
 
   move = readline.question("Play in any empty square (enter # 1-9)"); 
   while (!validMove(game, move)) {
@@ -100,12 +107,12 @@ isWin = ( board ) => {
 
 gameOver = (game, currentPlayer) => {
   if (isWin(game.board)) {
-    printBoard(game.board); 
+    game.printBoard(game.board); 
     var otherPlayer = (currentPlayer == playerOne)? playerTwo : playerOne; 
     console.log(otherPlayer.name + " won!! Congrats " + otherPlayer.name); 
     return true; 
   } else if (isTie(game.board)) {
-    printBoard(game.board); 
+    game.printBoard(game.board); 
     console.log("It's a tie!"); 
     return true; 
   } 
@@ -129,10 +136,7 @@ getPlayerNames = () => {
 playGame = () => {
   var currentPlayer = playerOne; 
 
-  const game = {
-    board: [" "," "," "," "," "," "," "," "," "],  
-  } 
-
+  const game = new Game();  
   while (!gameOver(game, currentPlayer)){
     takeTurn(game, currentPlayer); 
 
