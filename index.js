@@ -154,29 +154,33 @@ playAgain = () => {
   } 
 } 
 
-rollCredits = () => {
-  clear(); 
-  console.log(
-    chalk.yellow(
-      figlet.textSync('Thank You', { horizontalLayout: 'full', font: '3-d' })
-    )
-  ); 
-  console.log(
-    chalk.yellow(
-      figlet.textSync("* ldgarber 2019 *", { horiontalLayout: 'full' }) 
-    )
-  ); 
-}
 
-ultimateTicTacToe = () => {
-  displayTitle(); 
-  getPlayerNames(); 
-  var newGame; 
-  do {
-    playGame(); 
-    newGame = playAgain(); 
-  } while (newGame)
-  rollCredits();   
+
+class UltimateTicTacToe {
+  rollCredits() {
+    clear(); 
+    console.log(
+      chalk.yellow(
+        figlet.textSync('Thank You', { horizontalLayout: 'full', font: '3-d' })
+      )
+    ); 
+    console.log(
+      chalk.yellow(
+        figlet.textSync("* ldgarber 2019 *", { horiontalLayout: 'full' }) 
+      )
+    ); 
+  }
+
+  play() {
+    displayTitle(); 
+    getPlayerNames(); 
+    var newGame; 
+    do {
+      playGame(); 
+      newGame = playAgain(); 
+    } while (newGame)
+    this.rollCredits();   
+  } 
 } 
 
-ultimateTicTacToe(); 
+new UltimateTicTacToe().play(); 
