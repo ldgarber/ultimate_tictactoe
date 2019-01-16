@@ -3,22 +3,143 @@ const clear = require('clear');
 const figlet = require('figlet'); 
 const readline = require('readline-sync'); 
 
-class Game {
-  constructor() { 
-    this.board = [" "," "," "," "," "," "," "," "," "];   
+class Board {
+  constructor(board) {
+    this.board = board;  
   } 
 
-  printBoard() {
-    var board = this.board; 
-    var printedBoard = 
+  print() {
+     var board = this.board; 
+     var printedBoard = 
 `${board[0]} | ${board[1]} | ${board[2]}
 ---------
 ${board[3]} | ${board[4]} | ${board[5]}
 ---------
 ${board[6]} | ${board[7]} | ${board[8]}`
 
-    console.log(printedBoard); 
+    console.log(printedBoard);  
+  } 
+
+  occupied(cell) {
+    return (this.board[cell] != " ");  
+  } 
+
+  checkCombination(combo) {
+    if (combo[0] == " ") {
+      return false
+    } 
+    if (combo[0] == combo[1] && combo[1] == combo[2]) {
+      return true; 
+    } 
+    return false; 
+  } 
+  
+  checkCombinations(combinations) {
+    for (var i = 0; i < combinations.length; i++) {
+      if (this.checkCombination(combinations[i])) {
+        return true
+      } 
+    }; 
+    return false; 
+  } 
+
+  isWin() {
+    var board = this.board; 
+    var combinations = [ 
+        [board[0], board[3], board[6]], 
+        [board[1], board[4], board[7]], 
+        [board[2], board[5], board[8]], 
+        [board[0], board[1], board[2]], 
+        [board[3], board[4], board[5]], 
+        [board[6], board[7], board[8]], 
+        [board[0], board[4], board[8]], 
+        [board[2], board[4], board[6]]
+      ]; 
+
+    return this.checkCombinations(combinations); 
+  } 
+
+  isTie() {
+    return !(this.board.includes(" ")); 
+  } 
+
+  set(index, symbol) {
+    this.board[index] = symbol; 
+    return this.board; 
+  } 
+} 
+
+class Game {
+  constructor(playerOne, playerTwo) { 
+    this.board = new Board([" "," "," "," "," "," "," "," "," "]); 
+    this.playerOne = playerOne; 
+    this.playerTwo = playerTwo; 
+    this.currentPlayer = this.playerOne; 
+  } 
+
+  toggleCurrentPlayer() {
+    if (this.currentPlayer == this.playerOne) {
+      this.currentPlayer = this.playerTwo; 
+    } else {
+      this.currentPlayer = this.playerOne; 
+    } 
+  } 
+
+  play() {
+    while (!this.gameOver()){
+      this.takeTurn()
+
+      //switch current player
+      this.toggleCurrentPlayer(); 
+    }
+  } 
+
+  gameOver() {
+    if (this.board.isWin()) {
+      this.printBoard(this.board); 
+      console.log("You win!!"); 
+      return true; 
+    } else if (this.board.isTie()) {
+      this.printBoard(this.board); 
+      console.log("It's a tie!"); 
+      return true; 
+    } 
+    return false; 
+  } 
+
+  printBoard() {
+    this.board.print(); 
   }
+
+  takeTurn() {
+    var player = this.currentPlayer; 
+    console.log("Your turn, " + player.name); 
+    this.printBoard(this.board); 
+    var move; 
+    do { 
+      var move = player.getMove();    
+    } while (!this.validMove(move)) 
+    this.playMove(move); 
+  } 
+
+  playMove(move) {
+    this.board.set([move - 1], this.currentPlayer.symbol); 
+  } 
+
+  validMove(move) {
+    move = parseInt(move.trim()); 
+    if ((move == null) || isNaN(move)) {
+      console.log("Null or NaN"); 
+      return false 
+    } else if (move > 9 || move < 1) {
+      console.log("Not in range 1-9"); 
+      return false 
+    } else if (this.board.occupied([move - 1])) {
+      console.log("Game board is occupied at position"); 
+      return false; 
+    } 
+    return true
+  } 
 }
 
 class Player {
@@ -26,137 +147,41 @@ class Player {
     this.symbol = symbol;  
     this.name = name;  
   } 
-  getName() {
-    this.name
-  } 
-  setName(name) {
-    this.name = name; 
+
+  getMove() {
+    return readline.question("Play in any empty square (enter # 1-9)"); 
   } 
 } 
-
-const playerOne = new Player("", "X"); 
-const playerTwo = new Player("", "O"); 
-
-validMove = (game, move) => {
-  move = parseInt(move.trim()); 
-  console.log(move); 
-  if ((move == null) || isNaN(move)) {
-    console.log("null or NaN"); 
-    return false 
-  } else if (move > 9 || move < 1) {
-    console.log("not in range 1-9"); 
-    return false 
-  } else if (game.board[move - 1] != " ") {
-    console.log("game board is occupied at position"); 
-    return false; 
-  } 
-  return true
-} 
-
-playMove = (move, currentPlayer, game) => {
-  game.board[move - 1] = currentPlayer.symbol; 
-} 
-
-takeTurn = (game, currentPlayer) => {
-  console.log("Your turn, " + currentPlayer.name); 
-  game.printBoard(game.board); 
-
-  move = readline.question("Play in any empty square (enter # 1-9)"); 
-  while (!validMove(game, move)) {
-    move = readline.question("Move not valid. Please enter a digit between 1-9"); 
-  } 
-  playMove(move, currentPlayer, game); 
-} 
-
-isTie = ( board ) => {
-  return !(board.includes(" ")); 
-} 
-
-checkCombination = ( combo ) => {
-  if (combo[0] == " ") {
-    return false
-  } 
-  if (combo[0] == combo[1] && combo[1] == combo[2]) {
-    return true; 
-  } 
-  return false; 
-} 
-
-isWin = ( board ) => {
-  var won = false; 
-  combinations = [ 
-    [board[0], board[3], board[6]], 
-    [board[1], board[4], board[7]], 
-    [board[2], board[5], board[8]], 
-    [board[0], board[1], board[2]], 
-    [board[3], board[4], board[5]], 
-    [board[6], board[7], board[8]], 
-    [board[0], board[4], board[8]], 
-    [board[2], board[4], board[6]]
-  ]; 
-
-  combinations.forEach(function(combination) {
-    if (checkCombination(combination) == true) { 
-      won = true; 
-      return; 
-    } 
-  }); 
-
-  return won; 
-} 
-
-gameOver = (game, currentPlayer) => {
-  if (isWin(game.board)) {
-    game.printBoard(game.board); 
-    var otherPlayer = (currentPlayer == playerOne)? playerTwo : playerOne; 
-    console.log(otherPlayer.name + " won!! Congrats " + otherPlayer.name); 
-    return true; 
-  } else if (isTie(game.board)) {
-    game.printBoard(game.board); 
-    console.log("It's a tie!"); 
-    return true; 
-  } 
-  return false; 
-} 
-
-displayTitle = () => {
-  clear(); 
-  console.log(
-    chalk.yellow(
-      figlet.textSync('Tic Tac Toe', { horizontalLayout: 'full' })
-    )
-  ); 
-}
-
-getPlayerNames = () => {
-  playerOne.setName(readline.question("Player One, what is your name? ")); 
-  playerTwo.setName(readline.question("Player Two, what is your name? ")); 
-} 
-
-playGame = () => {
-  var currentPlayer = playerOne; 
-
-  const game = new Game();  
-  while (!gameOver(game, currentPlayer)){
-    takeTurn(game, currentPlayer); 
-
-    //switch current player
-    currentPlayer = (currentPlayer == playerOne) ? playerTwo : playerOne; 
-  }
-} 
-
-playAgain = () => {
-  userInput = readline.question("Would you like to play again? Y/n "); 
-  if (userInput.toLowerCase() == "y") {
-    return true; 
-  } else {
-    return false; 
-  } 
-} 
-
-
 
 class UltimateTicTacToe {
+  constructor() {
+    this.playerOne = new Player("", "X"); 
+    this.playerTwo = new Player("", "O"); 
+  } 
+
+  displayTitle() {
+    clear(); 
+    console.log(
+      chalk.yellow(
+        figlet.textSync('Tic Tac Toe', { horizontalLayout: 'full' })
+      )
+    ); 
+  }
+
+  getPlayerNames() {
+    this.playerOne.name = readline.question("Player One, what is your name? "); 
+    this.playerTwo.name = readline.question("Player Two, what is your name? "); 
+  } 
+
+  playAgain() {
+    var userInput = readline.question("Would you like to play again? Y/n "); 
+    if (userInput.toLowerCase() == "y") {
+      return true; 
+    } else {
+      return false; 
+    } 
+  } 
+
   rollCredits() {
     clear(); 
     console.log(
@@ -171,14 +196,19 @@ class UltimateTicTacToe {
     ); 
   }
 
-  play() {
-    displayTitle(); 
-    getPlayerNames(); 
-    var newGame; 
+  gameLoop() {
+    var keepPlaying; 
     do {
-      playGame(); 
-      newGame = playAgain(); 
-    } while (newGame)
+      new Game(this.playerOne, this.playerTwo).play(); 
+      keepPlaying = this.playAgain(); 
+    } while (keepPlaying)
+
+  } 
+
+  play() {
+    this.displayTitle(); 
+    this.getPlayerNames(); 
+    this.gameLoop(); 
     this.rollCredits();   
   } 
 } 
