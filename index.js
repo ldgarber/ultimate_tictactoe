@@ -102,11 +102,13 @@ class Game {
     } 
   } 
 
+
   gameOver() {
     if (this.board.isWin()) {
-      var winner = this.getWinner().name 
+      var winner = this.getWinner(); 
+      winner.incrementWins(); 
       this.printBoard(this.board); 
-      console.log("You win, " + winner + "!! Congratulations " + winner); 
+      console.log("You win, " + winner.name + "!! Congratulations " + winner.name); 
       return true; 
     } else if (this.board.isTie()) {
       this.printBoard(this.board); 
@@ -155,10 +157,19 @@ class Player {
   constructor(name, symbol) {
     this.symbol = symbol;  
     this.name = name;  
+    this.wins = 0; 
   } 
 
   getMove() {
     return readline.question("Play in any empty square (enter # 1-9)"); 
+  } 
+
+  incrementWins() {
+    this.wins += 1; 
+  } 
+
+  announceWins() {
+    console.log(this.name + " won " + this.wins + " times."); 
   } 
 } 
 
@@ -192,7 +203,6 @@ class UltimateTicTacToe {
   } 
 
   rollCredits() {
-    clear(); 
     console.log(
       chalk.yellow(
         figlet.textSync('Thank You', { horizontalLayout: 'full', font: '3-d' })
@@ -214,10 +224,16 @@ class UltimateTicTacToe {
 
   } 
 
+  announceWins() {
+    this.playerOne.announceWins(); 
+    this.playerTwo.announceWins(); 
+  } 
+
   play() {
     this.displayTitle(); 
     this.getPlayerNames(); 
     this.gameLoop(); 
+    this.announceWins(); 
     this.rollCredits();   
   } 
 } 
