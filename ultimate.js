@@ -6,51 +6,59 @@ const readline = require('readline-sync');
 board = [["X", " ", " "],[" ", "O", " "],["O", " ", "X"]]; 
 board2 = [[" ", "O", " "], ["X", " ", "O"], ["X"," "," "]]; 
 
-game = [[board, board, board2],[board, board2, board], [board2, board, board2]]
+game = [[board, board, board2],[board, board2, board], [board2, board, board2]];
+const active = [2, 1]; 
+ 
 
-//get one line of a board (line 0-2)
-getLine = (line, board) => {
-  var str = ""; 
+//get one line of one  board (line 0-2)
+getLine = (line, board, selected=false) => {
+  var str = "";  
   for (var index = 0; index < 3; index++) {
     str += (board[line][index]); 
     if (index != 2) {
       str += " | "; 
     } 
   }
-  return str; 
+  return (selected) ? chalk.blue(str) : str; 
 } 
 
-//get full line for top 3 games
-getFullLine = (line, game) => {
+//get full line of 3 boards in a row
+getFullLine = (line, game, activeRow=false) => {
+  var activeColumn; 
+  if (activeRow) { activeColumn = active[1]; } 
   var str = " "; 
-  str += (getLine(line, game[0]) + verticalDivider);
-  str += (getLine(line, game[1]) + verticalDivider); 
-  str += (getLine(line, game[2])); 
+  for (var i = 0; i < 3; i++) {
+    if (i == activeColumn) { 
+      str += getLine(line, game[i], true); 
+    } else { 
+      str += getLine(line, game[i], false); 
+    }
+    if (i != 2) { str += verticalDivider }; 
+  } 
   return str; 
 } 
 
 printRowOfGames = (game, gameRow) => {
-  console.log(getFullLine(0, game[gameRow])); 
-  console.log(" ---------" + verticalDivider + "---------" + verticalDivider + "--------- "); 
-  console.log(getFullLine(1, game[gameRow])); 
-  console.log(" ---------" + verticalDivider + "---------" + verticalDivider + "--------- "); 
-  console.log(getFullLine(2, game[gameRow]));  
+  var activeRow; 
+  if (gameRow == active[0]) {activeRow = true;} 
+  for (var i = 0; i < 3; i++) {
+    console.log(getFullLine(i, game[gameRow], activeRow)); 
+    if (i != 2) {
+      console.log(" ---------" + verticalDivider + "---------" + verticalDivider + "--------- "); 
+    }
+  } 
 } 
 
-//big board divider
 verticalDivider = chalk.red("  |  "); 
 
 //big horizontal divider
 horizontalDivider = chalk.red("---------------------------------------"); 
 
 printGame = (game) => {
-  printRowOfGames(game, 0); 
-  console.log(horizontalDivider); 
-
-  printRowOfGames(game, 1); 
-  console.log(horizontalDivider); 
-
-  printRowOfGames(game, 2); 
+  for (var i = 0; i < 3; i++) {
+    printRowOfGames(game, i); 
+    if (i != 2) { console.log(horizontalDivider) }
+  } 
 } 
 
 printGame(game); 
