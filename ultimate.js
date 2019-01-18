@@ -3,10 +3,9 @@ const clear = require('clear');
 const figlet = require('figlet'); 
 const readline = require('readline-sync'); 
 
-board = [["X", " ", " "],[" ", "O", " "],["O", " ", "X"]]; 
-board2 = [[" ", "O", " "], ["X", " ", "O"], ["X"," "," "]]; 
+board = [[" ", " ", " "],[" ", " ", " "],[" ", " ", " "]]; 
 
-game = [[board, board, board2],[board, board2, board], [board2, board, board2]];
+game = [[board, board, board],[board, board, board], [board, board, board]];
 const active = [2, 1]; 
  
 
@@ -44,8 +43,27 @@ printRowOfGames = (game, gameRow) => {
   for (var i = 0; i < 3; i++) {
     console.log(getFullLine(i, game[gameRow], activeRow)); 
     if (i != 2) {
-      console.log(" ---------" + verticalDivider + "---------" + verticalDivider + "--------- "); 
+      console.log(getHorizontalDividerRow(activeRow)); 
     }
+  } 
+} 
+
+getHorizontalDividerRow = (activeRow=false) => {
+  if (!activeRow) {
+    return " ---------" + verticalDivider + "---------" + verticalDivider + "--------- ";  
+  } else {
+    var str = " "; 
+    for (var i = 0; i < 3; i++) {
+      if (i == active[1]) {
+        str += chalk.blue("---------"); 
+      } else {
+        str += "---------"; 
+      } 
+      if (i != 2) {
+        str += verticalDivider; 
+      } 
+    } 
+    return str; 
   } 
 } 
 
