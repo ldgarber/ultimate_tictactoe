@@ -171,7 +171,7 @@ class Player {
   announceWins() {
     console.log(this.name + " won " + this.wins + " times."); 
   } 
-} 
+}  
 
 class UltimateTicTacToe {
   constructor() {
