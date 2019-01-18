@@ -43,14 +43,14 @@ printRowOfGames = (game, gameRow) => {
   for (var i = 0; i < 3; i++) {
     console.log(getFullLine(i, game[gameRow], activeRow)); 
     if (i != 2) {
-      console.log(getHorizontalDividerRow(activeRow)); 
+      printHorizontalDividerRow(activeRow); 
     }
   } 
 } 
 
-getHorizontalDividerRow = (activeRow=false) => {
+printHorizontalDividerRow = (activeRow=false) => {
   if (!activeRow) {
-    return " ---------" + verticalDivider + "---------" + verticalDivider + "--------- ";  
+    console.log(" ---------" + verticalDivider + "---------" + verticalDivider + "--------- ");  
   } else {
     var str = " "; 
     for (var i = 0; i < 3; i++) {
@@ -63,7 +63,7 @@ getHorizontalDividerRow = (activeRow=false) => {
         str += verticalDivider; 
       } 
     } 
-    return str; 
+    console.log(str); 
   } 
 } 
 
