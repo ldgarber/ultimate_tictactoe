@@ -29,7 +29,7 @@ getFullLine = (line, game) => {
   return str; 
 } 
 
-printLineOfGames = (gameRow) => {
+printRowOfGames = (game, gameRow) => {
   console.log(getFullLine(0, game[gameRow])); 
   console.log(" ---------" + verticalDivider + "---------" + verticalDivider + "--------- "); 
   console.log(getFullLine(1, game[gameRow])); 
@@ -44,14 +44,13 @@ verticalDivider = chalk.red("  |  ");
 horizontalDivider = chalk.red("---------------------------------------"); 
 
 printGame = (game) => {
-  printLineOfGames(0); 
+  printRowOfGames(game, 0); 
   console.log(horizontalDivider); 
 
-  printLineOfGames(1); 
+  printRowOfGames(game, 1); 
   console.log(horizontalDivider); 
 
-  printLineOfGames(2); 
-
+  printRowOfGames(game, 2); 
 } 
 
 printGame(game); 
