@@ -65,6 +65,10 @@ class Board {
                 [2, 0], [2, 1], [2, 2]]; 
     return cells[index - 1]; 
   } 
+
+  isGameOver() {
+    return (this.isWin() || this.isTie()); 
+  } 
 } 
 
 
@@ -121,19 +125,27 @@ class Game {
   } 
 
   initActiveGame() {
-    console.log(this.currentPlayer.name + ", you get to choose which game to start off in. ")
+    console.log(this.currentPlayer.name + ", you get to choose which game to play in. ")
 
-    var row, column; 
+    //need something here to display after user tries to play in invalid game
     do {
-      row = readline.question("Which row would you like to play in? (1-3)"); 
-    } while (!this.validGameInput(row)) 
-    do {
-      column = readline.question("Which column would you like to play in? (1-3)")
-    } while (!this.validGameInput(column))
+      var row, column; 
+      do {
+        row = readline.question("Which row would you like to play in? (1-3)"); 
+      } while (!this.validGameInput(row)) 
+      do {
+        column = readline.question("Which column would you like to play in? (1-3)")
+      } while (!this.validGameInput(column))
+    } while (this.occupied([row - 1, column - 1])); 
 
     this.active = [row - 1, column - 1]; 
     this.currentBoard = this.board[this.active[0]][this.active[1]]; 
   }
+
+  occupied(cell) {
+    var board = this.board[cell[0]][cell[1]]; 
+    return board.isGameOver(); 
+  } 
 
   validGameInput(move) {
     move = parseInt(move.trim()); 
@@ -148,7 +160,6 @@ class Game {
   } 
 
   play() {
-    this.initActiveGame(); 
     while (!this.gameOver()){
       this.takeTurn()
 
@@ -159,6 +170,11 @@ class Game {
 
   takeTurn() {
     var player = this.currentPlayer; 
+
+    if (this.active == null) {
+      this.initActiveGame(); 
+    } 
+    
     console.log("Your turn, " + player.name); 
     this.print(); 
     var move; 
@@ -166,6 +182,7 @@ class Game {
       var move = player.getMove();    
     } while (!this.validMove(move)) 
     this.playMove(move); 
+    this.print(); 
     this.setActiveBoard(move); 
   } 
 
@@ -176,6 +193,12 @@ class Game {
   setActiveBoard(move){ 
     this.active = this.toCell(move); 
     this.currentBoard = this.board[this.active[0]][this.active[1]];
+
+    if (this.currentBoard.isGameOver()) {
+      console.log("This board is already complete"); 
+      this.active = null; 
+      this.currentBoard = null; 
+    }
   } 
 
   validMove(move) {
