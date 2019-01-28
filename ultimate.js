@@ -3,6 +3,70 @@ const clear = require('clear');
 const figlet = require('figlet'); 
 const readline = require('readline-sync'); 
 
+class Board {
+  constructor(board = [[" ", " ", " "],[" ", " ", " "],[" ", " ", " "]]) {
+    this.board = board;  
+  } 
+
+  occupied(index) {
+    var cell = this.toCell(index); 
+    return (this.board[cell[0]][cell[1]] != " ");  
+  } 
+
+  checkCombination(combo) {
+    if (combo[0] == " ") {
+      return false
+    } 
+    if (combo[0] == combo[1] && combo[1] == combo[2]) {
+      return true; 
+    } 
+    return false; 
+  } 
+  
+  checkCombinations(combinations) {
+    for (var i = 0; i < combinations.length; i++) {
+      if (this.checkCombination(combinations[i])) {
+        return true
+      } 
+    }; 
+    return false; 
+  } 
+
+  isWin() {
+    var board = this.board; 
+    var combinations = [ 
+      [board[0][0], board[1][0], board[2][0]], 
+      [board[0][1], board[1][1], board[2][1]], 
+      [board[0][2], board[1][2], board[2][2]], 
+      [board[0][0], board[0][1], board[0][2]], 
+      [board[1][0], board[1][1], board[1][2]], 
+      [board[2][0], board[2][1], board[2][2]], 
+      [board[0][0], board[1][1], board[2][2]], 
+      [board[0][2], board[1][1], board[2][0]], 
+    ]; 
+
+    return this.checkCombinations(combinations); 
+  } 
+
+  isTie() {
+    return !(this.board.flat().includes(" ")); 
+  } 
+
+  set(index, symbol) {
+    var cell = this.toCell(index); 
+    this.board[cell[0]][cell[1]] = symbol; 
+    return this.board; 
+  } 
+
+  toCell(index) {
+    //1-9 value to 2d cell
+    var cells = [[0, 0], [0, 1], [0, 2], 
+                [1, 0], [1, 1], [1, 2], 
+                [2, 0], [2, 1], [2, 2]]; 
+    return cells[index - 1]; 
+  } 
+} 
+
 
 class Player {
   constructor(name, symbol) {
@@ -28,14 +92,16 @@ class Player {
 
 class Game {
   constructor(playerOne, playerTwo) {
-    var board = [[" ", " ", " "],[" ", " ", " "],[" ", " ", " "]]; 
-    this.board = [[board, board, board],[board, board, board], [board, board, board]]; 
+    this.board = [[new Board, new Board, new Board],
+                  [new Board, new Board, new Board], 
+                  [new Board, new Board, new Board]]; 
     this.active = null;  
     this.verticalDivider = chalk.red("  |  "); 
     this.horizontalDivider = chalk.red("---------------------------------------"); 
     this.playerOne = playerOne; 
     this.playerTwo = playerTwo; 
     this.currentPlayer = this.playerOne; 
+    this.currentBoard = null;  
   } 
 
   toggleCurrentPlayer() {
@@ -52,6 +118,7 @@ class Game {
     var column = readline.question("Which column would you like to play in? (1-3)")
     //need validation here!! 
     this.active = [row - 1, column - 1]; 
+    this.currentBoard = this.board[this.active[0]][this.active[1]]; 
   }
 
   play() {
@@ -77,12 +144,22 @@ class Game {
 
   //todo 
   playMove(move) {
-    return true; 
+    this.currentBoard.set(move, this.currentPlayer.symbol); 
   } 
 
-  //todo
   validMove(move) {
-    return true; 
+    move = parseInt(move.trim()); 
+    if ((move == null) || isNaN(move)) {
+      console.log("Null or NaN"); 
+      return false 
+    } else if (move > 9 || move < 1) {
+      console.log("Not in range 1-9"); 
+      return false 
+    } else if (this.currentBoard.occupied(move)) {
+      console.log("Game board is occupied at position"); 
+      return false; 
+    } 
+    return true
   } 
 
   //todo
@@ -127,7 +204,7 @@ class Game {
   getLine(line, board, selected=false) {
     var str = "";  
     for (var index = 0; index < 3; index++) {
-      str += (board[line][index]); 
+      str += (board.board[line][index]); 
       if (index != 2) {
         str += " | "; 
       } 
