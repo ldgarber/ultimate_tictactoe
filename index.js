@@ -102,16 +102,15 @@ class Game {
     } 
   } 
 
-
   gameOver() {
     if (this.board.isWin()) {
       var winner = this.getWinner(); 
       winner.incrementWins(); 
-      this.printBoard(this.board); 
+      this.printBoard(); 
       console.log("You win, " + winner.name + "!! Congratulations " + winner.name); 
       return true; 
     } else if (this.board.isTie()) {
-      this.printBoard(this.board); 
+      this.printBoard(); 
       console.log("It's a tie!"); 
       return true; 
     } 
@@ -125,7 +124,7 @@ class Game {
   takeTurn() {
     var player = this.currentPlayer; 
     console.log("Your turn, " + player.name); 
-    this.printBoard(this.board); 
+    this.printBoard(); 
     var move; 
     do { 
       var move = player.getMove();    
