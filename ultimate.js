@@ -112,14 +112,40 @@ class Game {
     } 
   } 
 
+  toCell(index) {
+    //1-9 value to 2d cell
+    var cells = [[0, 0], [0, 1], [0, 2], 
+                [1, 0], [1, 1], [1, 2], 
+                [2, 0], [2, 1], [2, 2]]; 
+    return cells[index - 1]; 
+  } 
+
   initActiveGame() {
     console.log(this.currentPlayer.name + ", you get to choose which game to start off in. ")
-    var row = readline.question("Which row would you like to play in? (1-3)")
-    var column = readline.question("Which column would you like to play in? (1-3)")
-    //need validation here!! 
+
+    var row, column; 
+    do {
+      row = readline.question("Which row would you like to play in? (1-3)"); 
+    } while (!this.validGameInput(row)) 
+    do {
+      column = readline.question("Which column would you like to play in? (1-3)")
+    } while (!this.validGameInput(column))
+
     this.active = [row - 1, column - 1]; 
     this.currentBoard = this.board[this.active[0]][this.active[1]]; 
   }
+
+  validGameInput(move) {
+    move = parseInt(move.trim()); 
+    if ((move == null) || isNaN(move)) {
+      console.log("Null or NaN"); 
+      return false 
+    } else if (move > 3 || move < 1) {
+      console.log("Not in range 1-3"); 
+      return false 
+    }     
+    return true
+  } 
 
   play() {
     this.initActiveGame(); 
@@ -140,11 +166,16 @@ class Game {
       var move = player.getMove();    
     } while (!this.validMove(move)) 
     this.playMove(move); 
+    this.setActiveBoard(move); 
   } 
 
-  //todo 
   playMove(move) {
     this.currentBoard.set(move, this.currentPlayer.symbol); 
+  } 
+
+  setActiveBoard(move){ 
+    this.active = this.toCell(move); 
+    this.currentBoard = this.board[this.active[0]][this.active[1]];
   } 
 
   validMove(move) {
