@@ -6,6 +6,7 @@ const readline = require('readline-sync');
 class Board {
   constructor(board = [[" ", " ", " "],[" ", " ", " "],[" ", " ", " "]]) {
     this.board = board;  
+    this.winner = null; 
   } 
 
   occupied(index) {
@@ -18,6 +19,7 @@ class Board {
       return false
     } 
     if (combo[0] == combo[1] && combo[1] == combo[2]) {
+      this.winner = combo[0]; 
       return true; 
     } 
     return false; 
@@ -218,8 +220,33 @@ class Game {
   } 
 
   //todo
-  gameOver() {
+  isUltimateWin() {
     return false; 
+  } 
+
+  //todo
+  gameOver() {
+    //need to check if three Boards in a row are Won by the same player
+    //or else if all Boards are gameOver() and there is no winner (TIE)
+    //also increment wins for the winning player
+    if (this.isUltimateWin()) {
+      //increment wins
+      return true; 
+    } else if (this.isUltimateTie()) {
+      return true; 
+    } else {
+      //not game over
+      return false; 
+    }
+  } 
+
+  isUltimateTie() {
+    for (let board of this.board.flat()) {
+      if (!board.isGameOver()){
+        return false;
+      } 
+    } 
+    return true; 
   } 
 
   print() {
