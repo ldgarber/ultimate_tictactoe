@@ -142,9 +142,22 @@ class Game {
     this.active = [row - 1, column - 1]; 
   }
 
+  setActiveBoard(move){ 
+    this.active = this.toCell(move); 
+
+    if (this.getCurrentBoard().isGameOver()) {
+      console.log("This board is complete"); 
+      this.active = null; 
+    }
+  } 
+
   occupied(cell) {
     var board = this.board[cell[0]][cell[1]]; 
-    return board.isGameOver(); 
+    let occupied = board.isGameOver(); 
+    if (occupied) { 
+      console.log("This game is complete, pick again."); 
+    } 
+    return occupied; 
   } 
 
   validGameInput(move) {
@@ -193,15 +206,6 @@ class Game {
 
   playMove(move) {
     this.getCurrentBoard().set(move, this.currentPlayer.symbol); 
-  } 
-
-  setActiveBoard(move){ 
-    this.active = this.toCell(move); 
-
-    if (this.getCurrentBoard().isGameOver()) {
-      console.log("This board is already complete"); 
-      this.active = null; 
-    }
   } 
 
   validMove(move) {
