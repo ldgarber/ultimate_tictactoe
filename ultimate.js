@@ -224,22 +224,25 @@ class Game {
   } 
 
   //todo
+  //return true if 3 games in a row are won by same player
+  //board.isWin() returns true if win
+  //board.winner will return symbol ("X", "O" of winner)
+  //need to go through all combos and check each one
   isUltimateWin() {
     return false; 
   } 
 
   //todo
   gameOver() {
-    //need to check if three Boards in a row are Won by the same player
-    //or else if all Boards are gameOver() and there is no winner (TIE)
-    //also increment wins for the winning player
     if (this.isUltimateWin()) {
-      //increment wins
+      this.toggleCurrentPlayer(); 
+      this.currentPlayer.incrementWins(); 
+      console.log("Congrats, " + currentPlayer.name + "!! You win. "); 
       return true; 
     } else if (this.isUltimateTie()) {
+      console.log("It's a tie!"); 
       return true; 
     } else {
-      //not game over
       return false; 
     }
   } 
