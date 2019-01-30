@@ -105,7 +105,6 @@ class Game {
     this.playerOne = playerOne; 
     this.playerTwo = playerTwo; 
     this.currentPlayer = this.playerOne; 
-    this.currentBoard = null;  
   } 
 
   toggleCurrentPlayer() {
@@ -139,7 +138,6 @@ class Game {
     } while (this.occupied([row - 1, column - 1])); 
 
     this.active = [row - 1, column - 1]; 
-    this.currentBoard = this.board[this.active[0]][this.active[1]]; 
   }
 
   occupied(cell) {
@@ -186,18 +184,21 @@ class Game {
     this.setActiveBoard(move); 
   } 
 
+  getCurrentBoard() {
+    if (this.active == null) { return null }; 
+    return this.board[this.active[0]][this.active[1]];
+  } 
+
   playMove(move) {
-    this.currentBoard.set(move, this.currentPlayer.symbol); 
+    this.getCurrentBoard().set(move, this.currentPlayer.symbol); 
   } 
 
   setActiveBoard(move){ 
     this.active = this.toCell(move); 
-    this.currentBoard = this.board[this.active[0]][this.active[1]];
 
-    if (this.currentBoard.isGameOver()) {
+    if (this.getCurrentBoard().isGameOver()) {
       console.log("This board is already complete"); 
       this.active = null; 
-      this.currentBoard = null; 
     }
   } 
 
@@ -209,7 +210,7 @@ class Game {
     } else if (move > 9 || move < 1) {
       console.log("Not in range 1-9"); 
       return false 
-    } else if (this.currentBoard.occupied(move)) {
+    } else if (this.getCurrentBoard().occupied(move)) {
       console.log("Game board is occupied at position"); 
       return false; 
     } 
