@@ -95,8 +95,6 @@ class Player {
   } 
 }  
 
-
-
 class Game {
   constructor(playerOne, playerTwo) {
     this.board = [[new Board, new Board, new Board],
@@ -249,13 +247,10 @@ class Game {
   } 
 
   checkUltimateCombination(combo) {
-    console.log("checking ultimate combo"); 
     if (combo[0].winner == null) {
-      console.log("Winner is null returning false"); 
       return false
     } 
     if (combo[0].winner == combo[1].winner && combo[1].winner == combo[2].winner) {
-      console.log("combo is a winner, should be game over"); 
       return true; 
     } 
     return false; 
