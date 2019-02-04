@@ -106,6 +106,14 @@ ${board[2][0]} | ${board[2][1]} | ${board[2][2]}`
     console.log(printedBoard);  
   } 
 
+  getWinner() {
+    if (this.isWin()) {
+      return this.winner; 
+    } else {
+      return null; 
+    } 
+  } 
+
   occupied(index) {
     var cell = this.toCell(index); 
     return (this.board[cell[0]][cell[1]] != " ");  
@@ -343,10 +351,10 @@ class UltimateGame {
   } 
 
   checkUltimateCombination(combo) {
-    if (combo[0].winner == null) {
+    if (!combo[0].isWin()) {
       return false
     } 
-    if (combo[0].winner == combo[1].winner && combo[1].winner == combo[2].winner) {
+    if (combo[0].getWinner() == combo[1].getWinner() && combo[1].getWinner() == combo[2].getWinner()) {
       return true; 
     } 
     return false; 

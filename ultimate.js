@@ -268,7 +268,6 @@ ${board[2][0]} | ${board[2][1]} | ${board[2][2]}`
       return false
     } 
     if (combo[0] == combo[1] && combo[1] == combo[2]) {
-      console.log("setting Winner value")
       this.winner = this.winner || combo[0]; 
       return true; 
     } 
