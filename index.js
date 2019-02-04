@@ -172,7 +172,7 @@ class Player {
   } 
 }  
 
-class UltimateTicTacToe {
+class TicTacToe {
   constructor() {
     this.playerOne = new Player("", "X"); 
     this.playerTwo = new Player("", "O"); 
@@ -237,4 +237,4 @@ class UltimateTicTacToe {
   } 
 } 
 
-new UltimateTicTacToe().play(); 
+new TicTacToe().play(); 
