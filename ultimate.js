@@ -19,7 +19,8 @@ class Board {
       return false
     } 
     if (combo[0] == combo[1] && combo[1] == combo[2]) {
-      this.winner = combo[0]; 
+      console.log("setting Winner value")
+      this.winner = this.winner || combo[0]; 
       return true; 
     } 
     return false; 
@@ -142,13 +143,12 @@ class Game {
     this.active = [row - 1, column - 1]; 
   }
 
-  setActiveBoard(move){ 
+  setActiveBoard(move) { 
     this.active = this.toCell(move); 
-
     if (this.getCurrentBoard().isGameOver()) {
       console.log("This board is complete"); 
       this.active = null; 
-    }
+    }   
   } 
 
   occupied(cell) {
@@ -223,21 +223,49 @@ class Game {
     return true
   } 
 
-  //todo
-  //return true if 3 games in a row are won by same player
-  //board.isWin() returns true if win
-  //board.winner will return symbol ("X", "O" of winner)
-  //need to go through all combos and check each one
   isUltimateWin() {
+    var board = this.board; 
+    var combinations = [ 
+      [board[0][0], board[1][0], board[2][0]], 
+      [board[0][1], board[1][1], board[2][1]], 
+      [board[0][2], board[1][2], board[2][2]], 
+      [board[0][0], board[0][1], board[0][2]], 
+      [board[1][0], board[1][1], board[1][2]], 
+      [board[2][0], board[2][1], board[2][2]], 
+      [board[0][0], board[1][1], board[2][2]], 
+      [board[0][2], board[1][1], board[2][0]], 
+    ]; 
+
+    return this.checkUltimateCombinations(combinations); 
+  } 
+  
+  checkUltimateCombinations(combinations) {
+    for (var i = 0; i < combinations.length; i++) {
+      if (this.checkUltimateCombination(combinations[i])) {
+        return true
+      } 
+    }; 
     return false; 
   } 
 
-  //todo
+  checkUltimateCombination(combo) {
+    console.log("checking ultimate combo"); 
+    if (combo[0].winner == null) {
+      console.log("Winner is null returning false"); 
+      return false
+    } 
+    if (combo[0].winner == combo[1].winner && combo[1].winner == combo[2].winner) {
+      console.log("combo is a winner, should be game over"); 
+      return true; 
+    } 
+    return false; 
+  } 
+
   gameOver() {
     if (this.isUltimateWin()) {
       this.toggleCurrentPlayer(); 
       this.currentPlayer.incrementWins(); 
-      console.log("Congrats, " + currentPlayer.name + "!! You win. "); 
+      console.log("Congrats, " + this.currentPlayer.name + "!! You win. "); 
       return true; 
     } else if (this.isUltimateTie()) {
       console.log("It's a tie!"); 
