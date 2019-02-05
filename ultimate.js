@@ -3,8 +3,91 @@ const clear = require('clear');
 const figlet = require('figlet'); 
 const readline = require('readline-sync'); 
 
-class UltimateBoard {
+class Board {
   constructor() {
+    this.board = [[" ", " ", " "],[" ", " ", " "],[" ", " ", " "]]; 
+    this.winner = null; 
+  } 
+
+  print() {
+     var board = this.board; 
+     var printedBoard = 
+`${board[0][0]} | ${board[0][1]} | ${board[0][2]}
+---------
+${board[1][0]} | ${board[1][1]} | ${board[1][2]}
+---------
+${board[2][0]} | ${board[2][1]} | ${board[2][2]}`
+
+    console.log(printedBoard);  
+  } 
+
+  occupied(index) {
+    var cell = this.toCell(index); 
+    return (this.board[cell[0]][cell[1]] != " ");  
+  } 
+
+  checkCombination(combo) {
+    if (combo[0] == " ") {
+      return false
+    } 
+    if (combo[0] == combo[1] && combo[1] == combo[2]) {
+      this.winner = this.winner || combo[0]; 
+      return true; 
+    } 
+    return false; 
+  } 
+  
+  checkCombinations(combinations) {
+    for (var i = 0; i < combinations.length; i++) {
+      if (this.checkCombination(combinations[i])) {
+        return true
+      } 
+    }; 
+    return false; 
+  } 
+
+  isWin() {
+    var board = this.board; 
+    var combinations = [ 
+      [board[0][0], board[1][0], board[2][0]], 
+      [board[0][1], board[1][1], board[2][1]], 
+      [board[0][2], board[1][2], board[2][2]], 
+      [board[0][0], board[0][1], board[0][2]], 
+      [board[1][0], board[1][1], board[1][2]], 
+      [board[2][0], board[2][1], board[2][2]], 
+      [board[0][0], board[1][1], board[2][2]], 
+      [board[0][2], board[1][1], board[2][0]], 
+    ]; 
+
+    return this.checkCombinations(combinations); 
+  } 
+
+  isTie() {
+    return !(this.board.flat().includes(" ")); 
+  } 
+
+  set(index, symbol) {
+    var cell = this.toCell(index); 
+    this.board[cell[0]][cell[1]] = symbol; 
+    return this.board; 
+  } 
+
+  toCell(index) {
+    //1-9 value to 2d cell
+    var cells = [[0, 0], [0, 1], [0, 2], 
+                [1, 0], [1, 1], [1, 2], 
+                [2, 0], [2, 1], [2, 2]]; 
+    return cells[index - 1]; 
+  } 
+
+  isGameOver() {
+    return (this.isWin() || this.isTie()); 
+  } 
+} 
+
+class UltimateBoard extends Board {
+  constructor() {
+    super(); 
     this.board = [[new Board, new Board, new Board],
                   [new Board, new Board, new Board], 
                   [new Board, new Board, new Board]];  
@@ -37,31 +120,6 @@ class UltimateBoard {
     } 
     return false; 
   } 
-  
-  checkCombinations(combinations) {
-    for (var i = 0; i < combinations.length; i++) {
-      if (this.checkCombination(combinations[i])) {
-        return true
-      } 
-    }; 
-    return false; 
-  } 
-
-  isWin() {
-    var board = this.board; 
-    var combinations = [ 
-      [board[0][0], board[1][0], board[2][0]], 
-      [board[0][1], board[1][1], board[2][1]], 
-      [board[0][2], board[1][2], board[2][2]], 
-      [board[0][0], board[0][1], board[0][2]], 
-      [board[1][0], board[1][1], board[1][2]], 
-      [board[2][0], board[2][1], board[2][2]], 
-      [board[0][0], board[1][1], board[2][2]], 
-      [board[0][2], board[1][1], board[2][0]], 
-    ]; 
-
-    return this.checkCombinations(combinations); 
-  } 
 
   isTie() {
     for (let board of this.board.flat()) {
@@ -71,24 +129,6 @@ class UltimateBoard {
     } 
     return true; 
   } 
-
-  set(index, symbol) {
-    var cell = this.toCell(index); 
-    this.board[cell[0]][cell[1]] = symbol; 
-    return this.board; 
-  } 
-
-  toCell(index) {
-    //1-9 value to 2d cell
-    var cells = [[0, 0], [0, 1], [0, 2], 
-                [1, 0], [1, 1], [1, 2], 
-                [2, 0], [2, 1], [2, 2]]; 
-    return cells[index - 1]; 
-  } 
-
-  isGameOver() {
-    return (this.isWin() || this.isTie()); 
-  }  
 
   print() {
     for (var i = 0; i < 3; i++) {
@@ -239,88 +279,6 @@ class Game {
 }
 
 
-
-class Board {
-  constructor(board = [[" ", " ", " "],[" ", " ", " "],[" ", " ", " "]]) {
-    this.board = board;  
-    this.winner = null; 
-  } 
-
-  print() {
-     var board = this.board; 
-     var printedBoard = 
-`${board[0][0]} | ${board[0][1]} | ${board[0][2]}
----------
-${board[1][0]} | ${board[1][1]} | ${board[1][2]}
----------
-${board[2][0]} | ${board[2][1]} | ${board[2][2]}`
-
-    console.log(printedBoard);  
-  } 
-
-  occupied(index) {
-    var cell = this.toCell(index); 
-    return (this.board[cell[0]][cell[1]] != " ");  
-  } 
-
-  checkCombination(combo) {
-    if (combo[0] == " ") {
-      return false
-    } 
-    if (combo[0] == combo[1] && combo[1] == combo[2]) {
-      this.winner = this.winner || combo[0]; 
-      return true; 
-    } 
-    return false; 
-  } 
-  
-  checkCombinations(combinations) {
-    for (var i = 0; i < combinations.length; i++) {
-      if (this.checkCombination(combinations[i])) {
-        return true
-      } 
-    }; 
-    return false; 
-  } 
-
-  isWin() {
-    var board = this.board; 
-    var combinations = [ 
-      [board[0][0], board[1][0], board[2][0]], 
-      [board[0][1], board[1][1], board[2][1]], 
-      [board[0][2], board[1][2], board[2][2]], 
-      [board[0][0], board[0][1], board[0][2]], 
-      [board[1][0], board[1][1], board[1][2]], 
-      [board[2][0], board[2][1], board[2][2]], 
-      [board[0][0], board[1][1], board[2][2]], 
-      [board[0][2], board[1][1], board[2][0]], 
-    ]; 
-
-    return this.checkCombinations(combinations); 
-  } 
-
-  isTie() {
-    return !(this.board.flat().includes(" ")); 
-  } 
-
-  set(index, symbol) {
-    var cell = this.toCell(index); 
-    this.board[cell[0]][cell[1]] = symbol; 
-    return this.board; 
-  } 
-
-  toCell(index) {
-    //1-9 value to 2d cell
-    var cells = [[0, 0], [0, 1], [0, 2], 
-                [1, 0], [1, 1], [1, 2], 
-                [2, 0], [2, 1], [2, 2]]; 
-    return cells[index - 1]; 
-  } 
-
-  isGameOver() {
-    return (this.isWin() || this.isTie()); 
-  } 
-} 
 
 
 class Player {
