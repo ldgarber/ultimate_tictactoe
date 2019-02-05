@@ -155,7 +155,7 @@ class UltimateBoard {
   } 
 } 
 
-class NormalGame {
+class Game {
   constructor(playerOne, playerTwo) { 
     this.board = new Board(); 
     this.playerOne = playerOne; 
@@ -343,20 +343,10 @@ class Player {
   } 
 }  
 
-class UltimateGame {
+class UltimateGame extends Game {
   constructor(playerOne, playerTwo) {
+    super(playerOne, playerTwo); 
     this.board = new UltimateBoard(); 
-    this.playerOne = playerOne; 
-    this.playerTwo = playerTwo; 
-    this.currentPlayer = this.playerOne; 
-  } 
-
-  toggleCurrentPlayer() {
-    if (this.currentPlayer == this.playerOne) {
-      this.currentPlayer = this.playerTwo; 
-    } else {
-      this.currentPlayer = this.playerOne; 
-    } 
   } 
 
   toCell(index) {
@@ -404,15 +394,6 @@ class UltimateGame {
     return true
   } 
 
-  play() {
-    while (!this.gameOver()){
-      this.takeTurn()
-
-      //switch current player
-      this.toggleCurrentPlayer(); 
-    }
-  } 
-
   takeTurn() {
     var player = this.currentPlayer; 
 
@@ -453,88 +434,6 @@ class UltimateGame {
       return false; 
     } 
     return true
-  } 
-
-  gameOver() {
-    if (this.board.isWin()) {
-      this.toggleCurrentPlayer(); 
-      this.currentPlayer.incrementWins(); 
-      console.log("Congrats, " + this.currentPlayer.name + "!! You win. "); 
-      return true; 
-    } else if (this.board.isTie()) {
-      console.log("It's a tie!"); 
-      return true; 
-    } else {
-      return false; 
-    }
-  } 
-
-  printBoard() {
-    this.board.print(); 
-  } 
-
-  print() {
-    for (var i = 0; i < 3; i++) {
-      this.printRowOfGames(i); 
-      if (i != 2) { console.log(this.horizontalDivider) }
-    } 
-  } 
-
-  printRowOfGames(gameRow) {
-    var activeRow; 
-    if (gameRow == this.active[0]) {activeRow = true;} 
-    for (var i = 0; i < 3; i++) {
-      console.log(this.getFullLine(i, this.board[gameRow], activeRow)); 
-      if (i != 2) {
-        this.printHorizontalDividerRow(activeRow); 
-      }
-    } 
-  }
-
-  getFullLine(line, game, activeRow=false) {
-    var activeColumn; 
-    if (activeRow) { activeColumn = this.active[1]; } 
-    var str = " "; 
-    for (var i = 0; i < 3; i++) {
-      if (i == activeColumn) { 
-        str += this.getLine(line, game[i], true); 
-      } else { 
-        str += this.getLine(line, game[i], false); 
-      }
-      if (i != 2) { str += this.verticalDivider }; 
-    } 
-    return str;
-  } 
-
-  //get one line of one  board (line 0-2)
-  getLine(line, board, selected=false) {
-    var str = "";  
-    for (var index = 0; index < 3; index++) {
-      str += (board.board[line][index]); 
-      if (index != 2) {
-        str += " | "; 
-      } 
-    }
-    return (selected) ? chalk.blue(str) : str; 
-  } 
-
-  printHorizontalDividerRow(activeRow=false) {
-    if (!activeRow) {
-      console.log(" ---------" + this.verticalDivider + "---------" + this.verticalDivider + "--------- ");  
-    } else {
-      var str = " "; 
-      for (var i = 0; i < 3; i++) {
-        if (i == this.active[1]) {
-          str += chalk.blue("---------"); 
-        } else {
-          str += "---------"; 
-        } 
-        if (i != 2) {
-          str += this.verticalDivider; 
-        } 
-      } 
-      console.log(str); 
-    } 
   } 
 
 };
@@ -595,7 +494,7 @@ class UltimateTicTacToe {
       if (!!ultimate) {
         new UltimateGame(this.playerOne, this.playerTwo).play(); 
       } else {
-        new NormalGame(this.playerOne, this.playerTwo).play(); 
+        new Game(this.playerOne, this.playerTwo).play(); 
       } 
       keepPlaying = this.playAgain(); 
     } while (keepPlaying)
