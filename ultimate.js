@@ -411,6 +411,11 @@ class UltimateTicTacToe {
         figlet.textSync('Tic Tac Toe', { horizontalLayout: 'full' })
       )
     ); 
+    console.log(
+      chalk.yellow(
+        "Ultimate Tic Tac Toe is a 9x9 board where each cell is made up of a normal tic tac toe board. \nWhen you make a move, the next player must play in the board at the same location as the last move you made in your mini-board. \n(Try it, it's not as complicated as it sounds!)"
+      ) 
+    ); 
   }
 
   getPlayerNames() {
